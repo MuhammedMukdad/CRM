@@ -18,7 +18,7 @@ class CreateReceivedNotificationsTable extends Migration
             $table->unsignedBigInteger("receiver_id");
             $table->foreign("receiver_id")->references("id")->on("employees");
             $table->unsignedBigInteger("notification_id");
-            $table->foreign("notification_id")->references("id")->on("notification_id");
+            $table->foreign("notification_id")->references("id")->on("notifications");
             $table->timestamps();
         });
     }
