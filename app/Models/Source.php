@@ -9,10 +9,13 @@ class Source extends Model
 {
     use HasFactory;
     protected $fillable=['name'];
+    protected $hidden=[
+        'pivot'
+    ];
 
 
     public function campaigns(){
-        return $this->belongsToMany(Campaign::class,'source_campaign','source_id','campaign_id','id','id');
+        return $this->belongsToMany(Campaign::class,'source_campaigns','source_id','campaign_id','id','id');
 
     }
 }

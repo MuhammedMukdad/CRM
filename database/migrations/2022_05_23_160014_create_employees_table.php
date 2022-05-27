@@ -21,7 +21,7 @@ class CreateEmployeesTable extends Migration
             $table->string("address");
             $table->string('password');
             $table->rememberToken();
-            $table->tinyInteger('isAdmin');
+            $table->tinyInteger('isAdmin')->default(0);
             $table->text("description")->nullable();
             $table->unsignedBigInteger("department_id");
             $table->foreign("department_id")->references("id")->on("departments");

@@ -10,6 +10,9 @@ class Campaign extends Model
     use HasFactory;
 
     protected $fillable=['name','start_date','end_date','state','num_leads','remaining_lead','service_id','description'];
+    protected $hidden=[
+        'pivot'
+    ];
 
     public function service(){
         return $this->belongsTo(Service::class,'service_id','id');
@@ -20,7 +23,7 @@ class Campaign extends Model
     }
 
     public function source(){
-        return $this->belongsToMany(Source::class,'source_campaign','campaign_id','source_id','id','id');
+        return $this->belongsToMany(Source::class,'source_campaigns','campaign_id','source_id','id','id');
 
     }
 }
