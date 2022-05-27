@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ReceivedNotification;
+use App\Models\ServiceEmployee;
 use Illuminate\Database\Seeder;
 
-class receivedNotificationSeeder extends Seeder
+class ServiceEmployeeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class receivedNotificationSeeder extends Seeder
      */
     public function run()
     {
-        ReceivedNotification::factory()->count(50)->create();
+        ServiceEmployee::factory()->count(15)->create();
     }
 }
