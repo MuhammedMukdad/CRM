@@ -10,10 +10,30 @@ use App\Models\Lead;
 
 class LeadController extends BaseController
 {
+
+
+   public function show($id)
+   {
+      $Lead = Lead::findOrFail($id);
+      return $this->sendResponse($Lead,'Lead returned successfully');
+
+   }
     public function index()
     {
        $Leads = Lead::all();
        return $this->sendResponse($Leads,'Leads returned successfully');
+
+    }
+
+    public function store(LeadRequest $request)
+    {
+   
+       $validated = $request->validated();
+       $validated = $request->safe()->all();
+
+       $Lead= Lead::create($request->all());
+
+       return $this->sendResponse($Lead,'Lead created successfully');
 
     }
 
@@ -32,5 +52,13 @@ class LeadController extends BaseController
         return $this->sendResponse($Lead,'Lead updated successfully');
 
    }
+
+   public function destroy($id){
+
+      $Lead = Lead::destroy($id);
+
+      return $this->sendResponse($Lead,'Lead destroyed successfully');
+
+  } 
     
 }
