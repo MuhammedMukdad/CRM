@@ -59,6 +59,8 @@ Route::resource('campaigns.sources',CampaignSourceController::class)->only([
     'index'
 ]);
 
+Route::get('campaign-search','CampaignSourceController@csearch');
+
 /*
 sources
 */

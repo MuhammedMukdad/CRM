@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class BaseController
 {
     public function sendResponse($result, $message,$code=200){ // fun sends theResponse to user with result and massage
@@ -27,5 +29,15 @@ class BaseController
          'code'=>$code
         ];
         return response()->json($response, $code);
-}
+    }
+
+    public function search($model,$searchField,$searchValue){
+        $collection=new Collection() ;
+
+        for ($i=0; $i <count($searchField) ; $i++) { 
+            $value=$model->where($searchField[$i],'LIKE','%'.$searchValue.'%')->get();
+            $collection->splice($collection->count(),0,$value);
+        }
+        return $collection; //$model->where($searchField,'LIKE','%'.$searchValue.'%')->get();
+    }
 }
