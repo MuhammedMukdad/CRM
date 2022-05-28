@@ -12,7 +12,12 @@ class CampaignController extends BaseController
 
 
    
-
+    public function show($id)
+    {
+      $Campaign = Campaign::findOrFail($id);
+       return $this->sendResponse($Campaign,'Campaigns returned successfully');
+       
+    }
     public function index()
     {
        $Campaigns = Campaign::all();
