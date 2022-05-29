@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class employeeRequest extends FormRequest
 {
@@ -15,8 +16,17 @@ class employeeRequest extends FormRequest
     
     public function rules()
     {
-        return [
-            
+        return  [
+            'name'=>'required',
+            'email'=>'required',
+            'phone'=>'required',
+            'address'=>'required',
+            'password'=>'required',
+            'isAdmin'=>'required',
+            'description'=>'required',
+            'department_id'=>'required'
         ];
+
     }
+   
 }
