@@ -26,12 +26,15 @@ class LeadRequest extends FormRequest
         return [
             'name'=>'required|string|max:20',
             'email'=>'required|email',
-            'phone'=>'required',
+            'phone'=>'required|integer',
             'profit_amount'=>'required',
             'state'=>'required',
             'address'=>'required',
             'arrive_date'=>'required|date',
             'description'=>'required|string|min:0|max:1000',
+            'service_id'=>'required|integer',
+            'source_id'=>'required|integer',
+            'campaign_id'=>'required|integer'
         ];
     }
 }

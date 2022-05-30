@@ -59,7 +59,7 @@ Route::resource('campaigns.sources',CampaignSourceController::class)->only([
     'index'
 ]);
 Route::resource('campaigns',CampaignController::class)->only([
-   'index', 'store' ,'update', 'destroy'
+   'show','index', 'store' ,'update', 'destroy'
 ]);
 
 /**
@@ -69,7 +69,7 @@ Route::resource('campaigns',CampaignController::class)->only([
 Route::get('campaign-search','CampaignSourceController@csearch');
 
 Route::resource('leads',LeadController::class)->only([
-    'index','update'
+    'show','index', 'store' ,'update', 'destroy'
  ]);
 /*
 sources
