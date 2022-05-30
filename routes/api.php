@@ -54,6 +54,7 @@ Route::resource('services.campaigns',ServiceCampaignController::class)->only([
 ]);
 
 Route::get('services-search','CampaignController@compaignSearch');
+Route::get('services-filter','ServiceController@filterService');
 /*
 department
 */
@@ -71,7 +72,8 @@ Route::resource('campaigns',CampaignController::class)->only([
    'show','index', 'store' ,'update', 'destroy'
 ]);
 
-Route::get('campaigns-search','ServiceController@serviceSearch');
+Route::get('campaigns-search','CompaignController@compaignSearch');
+Route::get('campaigns-filter','CompaignController@filterCampaign');
 
 /**
  * Leads
@@ -82,7 +84,8 @@ Route::resource('leads',LeadController::class)->only([
  ]);
 
  Route::get('leads-search','LeadController@leadSearch');
-/*
+ Route::get('leads-filter','LeadController@filterLeads');
+ /*
 sources
 */
 Route::resource('sources.campaigns',SourceCampaignController::class)->only([

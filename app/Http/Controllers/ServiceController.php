@@ -67,4 +67,14 @@ class ServiceController extends BaseController
             return $this->sendResponse($result,'done');
         }
     }
+
+    public function filterService(Request $request){
+        $result = $this->filter(new Service());
+        if($request->has('date1')){
+          $request=$request->whereBetween('date',[$request->date1,$request->date2]);
+        }
+        
+        $result->splice($result->count(),0);
+        return $this->sendResponse($result,'done');
+     }
 }

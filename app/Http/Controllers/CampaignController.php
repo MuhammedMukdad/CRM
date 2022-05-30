@@ -70,5 +70,17 @@ class CampaignController extends BaseController
         }
     }
 
+    public function filterCampaign(Request $request){
+        $result = $this->filter(new Campaign());
+        if($request->has('start_date1')){
+            $result=$result->whereBetween('start_date',[$request->start_date1,$request->start_date2]);
+        }
+        if($request->has('end_date1')){
+            $result=$result->whereBetween('end_date',[$request->end_date1,$request->end_date2]);
+        }
+        $result->splice($result->count(),0);
+        return $this->sendResponse($result,'done');
+     }
+
 
 }

@@ -56,7 +56,6 @@ class LeadController extends BaseController
    public function destroy($id){
 
       $Lead = Lead::destroy($id);
-
       return $this->sendResponse($Lead,'Lead destroyed successfully');
 
   } 
@@ -66,6 +65,16 @@ class LeadController extends BaseController
            $result=$this->search(new Lead(),['name','email','phone','description'],$request->search_value);
             return $this->sendResponse($result,'done');
         }
+    }
+
+    public function filterLeads(Request $request){
+       $result = $this->filter(new Lead());
+       if($request->has('arrive_date')){
+         $request=$request->whereBetween('arrive_date',[$request->date1,$request->date2]);
+       }
+       
+       $result->splice($result->count(),0);
+       return $this->sendResponse($result,'done');
     }
     
 }
