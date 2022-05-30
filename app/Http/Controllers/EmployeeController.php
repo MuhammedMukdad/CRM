@@ -18,4 +18,12 @@ class EmployeeController extends BaseController
     {
 
     }
+
+    public function employeeSearch(Request $request)
+    {
+        if($request->search_value!=null){
+           $result=$this->search(new Employee(),['name','email','phone','description'],$request->search_value);
+            return $this->sendResponse($result,'done');
+        }
+    }
 }

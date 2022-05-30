@@ -20,11 +20,4 @@ class CampaignSourceController extends BaseController
         return $this->sendResponse($sources,'done');
     }
 
-    public function csearch(Request $request)
-    {
-        if($request->search_value!=null){
-           $result=$this->search(new Campaign(),['name','description'],$request->search_value);
-            return $this->sendResponse($result,'done');
-        }
-    }
 }
