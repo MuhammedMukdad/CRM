@@ -4,8 +4,10 @@ namespace App\Http\Controllers ;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\EmployeeNotificationRequest;
+use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Notification;
+use App\Models\ReceivedNotification;
 use Illuminate\Http\Request;
 
 class EmployeeNotificationController extends BaseController
@@ -33,6 +35,17 @@ class EmployeeNotificationController extends BaseController
         $notification=$request->all();
         $notification['sender_id']=$employee->id;
         $notification=Notification::create($notification);
+
+        //specify the receivers 
+        $dep=Department::findOrFail($request->department_id);
+        $recivers=$dep->employees;
+        for ($i=0; $i <$recivers->count($recivers) ; $i++) { 
+            ReceivedNotification::create([
+                'notification_id'=>$notification->id,
+                'receiver_id'=>$recivers[$i]->id
+            ]);
+        }
+
         return $this->sendResponse($notification,'done');
     }
 

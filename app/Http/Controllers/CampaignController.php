@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\CampaignRequest;
 use App\Models\Campaign;
 use App\Models\Service;
+use Illuminate\Http\Request;
 
 class CampaignController extends BaseController
 {
@@ -61,7 +62,25 @@ class CampaignController extends BaseController
     } 
  
    
+    public function compaignSearch(Request $request)
+    {
+        if($request->search_value!=null){
+           $result=$this->search(new Campaign(),['name','description'],$request->search_value);
+            return $this->sendResponse($result,'done');
+        }
+    }
 
+    public function filterCampaign(Request $request){
+        $result = $this->filter(new Campaign());
+        if($request->has('start_date1')){
+            $result=$result->whereBetween('start_date',[$request->start_date1,$request->start_date2]);
+        }
+        if($request->has('end_date1')){
+            $result=$result->whereBetween('end_date',[$request->end_date1,$request->end_date2]);
+        }
+        $result->splice($result->count(),0);
+        return $this->sendResponse($result,'done');
+     }
 
 
 }
