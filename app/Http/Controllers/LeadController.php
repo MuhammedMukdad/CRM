@@ -32,5 +32,13 @@ class LeadController extends BaseController
         return $this->sendResponse($Lead,'Lead updated successfully');
 
    }
+
+   public function leadSearch(Request $request)
+    {
+        if($request->search_value!=null){
+           $result=$this->search(new Lead(),['name','email','phone','description'],$request->search_value);
+            return $this->sendResponse($result,'done');
+        }
+    }
     
 }

@@ -35,6 +35,8 @@ Route::resource('employees.received-notifications', EmployeeReceivedNotification
 ]);
 
 
+Route::get('employees-search','EmployeeController@employeeSearch');
+
 /*
 Services
 */
@@ -45,6 +47,8 @@ Route::resource('services.employees',ServiceEmployeeController::class)->only([
 Route::resource('services.campaigns',ServiceCampaignController::class)->only([
     'index'
 ]);
+
+Route::get('services-search','CampaignController@compaignSearch');
 /*
 department
 */
@@ -62,15 +66,17 @@ Route::resource('campaigns',CampaignController::class)->only([
    'index', 'store' ,'update', 'destroy'
 ]);
 
+Route::get('campaigns-search','ServiceController@serviceSearch');
+
 /**
  * Leads
  */
 
-Route::get('campaign-search','CampaignSourceController@csearch');
-
 Route::resource('leads',LeadController::class)->only([
     'index','update'
  ]);
+
+ Route::get('leads-search','LeadController@leadSearch');
 /*
 sources
 */

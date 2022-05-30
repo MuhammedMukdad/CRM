@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\CampaignRequest;
 use App\Models\Campaign;
 use App\Models\Service;
+use Illuminate\Http\Request;
 
 class CampaignController extends BaseController
 {
@@ -56,7 +57,13 @@ class CampaignController extends BaseController
     } 
  
    
-
+    public function compaignSearch(Request $request)
+    {
+        if($request->search_value!=null){
+           $result=$this->search(new Campaign(),['name','description'],$request->search_value);
+            return $this->sendResponse($result,'done');
+        }
+    }
 
 
 }
