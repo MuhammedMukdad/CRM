@@ -38,6 +38,6 @@ class BaseController
             $value=$model->where($searchField[$i],'LIKE','%'.$searchValue.'%')->get();
             $collection->splice($collection->count(),0,$value);
         }
-        return $collection; //$model->where($searchField,'LIKE','%'.$searchValue.'%')->get();
+        return $collection;
     }
 }
