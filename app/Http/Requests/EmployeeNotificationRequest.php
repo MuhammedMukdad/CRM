@@ -24,7 +24,8 @@ class EmployeeNotificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'message'=>'required|min:5'
+            'message'=>'required|min:5',
+            'department_id'=>'required'
         ];
     }
 }
