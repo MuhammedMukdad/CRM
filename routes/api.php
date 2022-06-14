@@ -53,7 +53,7 @@ Route::resource('services.campaigns',ServiceCampaignController::class)->only([
     'index'
 ]);
 
-Route::get('services-search','ServiceController@filterService');
+Route::get('services-search','ServiceController@serviceSearch');
 Route::get('services-filter','ServiceController@filterService');
 /*
 department
