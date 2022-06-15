@@ -9,7 +9,7 @@ class Lead extends Model
 {
     use HasFactory;
     protected $fillable=['name','email','phone','address','description','profit_amount','state',
-                        'arrive_date','service_id','source_id','campaign_id'];
+                        'arrive_date','service_id','source_id','campaign_id','seen','employee_id'];
    public function service(){
         return $this->belongsTo(Service::class,'service_id','id');
     }

@@ -7,6 +7,8 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\LeadRequest;
 use Illuminate\Http\Request;
 use App\Models\Lead;
+use App\Models\Service;
+use App\Models\ServiceEmployee;
 
 class LeadController extends BaseController
 {
@@ -30,8 +32,24 @@ class LeadController extends BaseController
    
        $validated = $request->validated();
        $validated = $request->safe()->all();
-
-       $Lead= Lead::create($request->all());
+      
+       $serviceEmp=ServiceEmployee::where('service_id',$request->service_id)->where('state',1)->get();
+      $leads=null;
+       for ($i=0; $i <count($serviceEmp) ; $i++) { 
+         $leads[$i]=Lead::where('employee_id',$serviceEmp[$i]->employee_id)->get();
+      }
+      $min=100000000000;
+      $emp_id=-5;
+      for ($i=0; $i <count($leads) ; $i++) { 
+         if(count($leads[$i])<$min){
+            $min=count($leads[$i]);
+            $emp_id=$leads[$i]->employee_id;
+         }
+      }
+      $newLead=$request->all();
+      $newLead['employee_id']=$emp_id;
+      $newLead['seen']=1;
+       $Lead= Lead::create($newLead);
 
        return $this->sendResponse($Lead,'Lead created successfully');
 
