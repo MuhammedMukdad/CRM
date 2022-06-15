@@ -46,7 +46,7 @@ Route::resource('services', ServiceController::class)->only([
 ]);
 
 Route::resource('services.employees',ServiceEmployeeController::class)->only([
-    'index'
+    'index','store'
 ]);
 
 Route::resource('services.campaigns',ServiceCampaignController::class)->only([

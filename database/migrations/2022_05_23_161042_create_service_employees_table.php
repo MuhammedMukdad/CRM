@@ -15,6 +15,7 @@ class CreateServiceEmployeesTable extends Migration
     {
         Schema::create('service_employees', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger("state")->default(1);
             $table->unsignedBigInteger("service_id");
             $table->foreign("service_id")->references("id")->on("services");
             $table->unsignedBigInteger("employee_id");

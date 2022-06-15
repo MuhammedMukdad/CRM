@@ -26,6 +26,16 @@ class BaseController
 
     }
 
+    public function sendMessage($message,$code=200){
+        $response = [
+            'status' => true,
+            'message' =>$message,
+            'code'=>$code
+            //succes is Key and true is  value
+           ] ;
+           return response()->json( $response, $code); 
+    }
+
     public function sendError($errorMessage=[], $code = 404){
         $response = [
          'status' => false,
