@@ -69,9 +69,9 @@ class ServiceController extends BaseController
     }
 
     public function filterService(Request $request){
-        $result = $this->filter(new Service());
+       // $result = $this->filter(new Service());
         if($request->has('date1')){
-          $request=$request->whereBetween('date',[$request->date1,$request->date2]);
+          $result=$request->whereBetween('date',[$request->date1,$request->date2]);
         }
         
         $result->splice($result->count(),0);
