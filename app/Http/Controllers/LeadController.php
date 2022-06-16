@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\LeadRequest;
+use App\Models\Campaign;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Service;
 use App\Models\ServiceEmployee;
+use App\Models\Source;
+use Illuminate\Database\Eloquent\Collection;
 
 class LeadController extends BaseController
 {
@@ -86,13 +90,40 @@ class LeadController extends BaseController
     }
 
     public function filterLeads(Request $request){
-       $result = $this->filter(new Lead());
-       if($request->has('arrive_date')){
-         $request=$request->whereBetween('arrive_date',[$request->date1,$request->date2]);
-       }
-       
-       $result->splice($result->count(),0);
-       return $this->sendResponse($result,'done');
+      
+        $collection=new Collection() ;
+        $collection=Lead::all();
+        foreach (request()->query() as $query => $value) {
+            if(isset($query,$value)){
+                if($query == 'service'){
+                    $service=Service::where('name',$value)->get()->first();
+                    $collection=$collection->where('service_id',$service->id);
+                    continue;
+                }
+                else if($query == 'campaign'){
+                    $campaign=Campaign::where('name',$value)->get()->first();
+                    $collection=$collection->where('campaign_id',$campaign->id);
+                    continue;
+                }
+                else if($query == 'source'){
+                    $source=Source::where('name',$value)->get()->first();
+                    $collection=$collection->where('source_id',$source->id);
+                    continue;
+                }
+
+                else if($query == 'employee'){
+                  $employee=Employee::where('name',$value)->get()->first();
+                  $collection=$collection->where('employee_id',$employee->id);
+                  continue;
+              }
+              if($query =='arrive_date'){
+               $collection=$collection->whereBetween('arrive_date',[$request->date1,$request->date2]);
+                }
+
+                $collection=$collection->where($query,$value);
+            }
+        }
+        return $this->sendResponse($collection,'done');
     }
     
 }

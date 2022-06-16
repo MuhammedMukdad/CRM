@@ -54,31 +54,4 @@ class BaseController
         }
         return $collection;
     }
-
-    public function filter($model){
-
-        $collection=new Collection() ;
-        $collection=$model::all();
-        foreach (request()->query() as $query => $value) {
-            if(isset($query,$value)){
-                if($query == 'service'){
-                    $service=Service::where('name',$value)->get()->first();
-                    $collection=$collection->where('service_id',$service->id);
-                    continue;
-                }
-                else if($query == 'campaign'){
-                    $campaign=Campaign::where('name',$value)->get()->first();
-                    $collection=$collection->where('campaign_id',$campaign->id);
-                    continue;
-                }
-                else if($query == 'source'){
-                    $source=Source::where('name',$value)->get()->first();
-                    $collection=$collection->where('source_id',$source->id);
-                    continue;
-                }
-                $collection=$collection->where($query,$value);
-            }
-        }
-        return $collection;
-    }
 }

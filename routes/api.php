@@ -55,6 +55,8 @@ Route::resource('services.campaigns',ServiceCampaignController::class)->only([
 
 Route::get('services-search','ServiceController@serviceSearch');
 Route::get('services-filter','ServiceController@filterService');
+
+Route::get('leads-transfer/{serviceId}/{oldId}/{newId}','ServiceController@ServiceController');
 /*
 department
 */

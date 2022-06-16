@@ -6,6 +6,9 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\CampaignRequest;
 use App\Models\Campaign;
 use App\Models\Service;
+use App\Models\Source;
+use App\Models\SourceCampaign;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class CampaignController extends BaseController
@@ -71,15 +74,35 @@ class CampaignController extends BaseController
     }
 
     public function filterCampaign(Request $request){
-        $result = $this->filter(new Campaign());
-        if($request->has('start_date1')){
-            $result=$result->whereBetween('start_date',[$request->start_date1,$request->start_date2]);
+        $collection=new Collection() ;
+        $collection=Campaign::all();
+        foreach (request()->query() as $query => $value) {
+            if(isset($query,$value)){
+                if($query == 'service'){
+                    $service=Service::where('name',$value)->get()->first();
+                    $collection=$collection->where('service_id',$service->id);
+                    continue;
+                }
+                else if($query == 'source'){
+                    $source=Source::where('name',$value)->get()->first();
+                    $sourceCampaign=SourceCampaign::where('source_id',$source->id);
+                    for ($i=0; $i <count($collection) ; $i++) {
+                       if(!$sourceCampaign->contains($collection[$i]->id)){
+                            $collection->forget($collection[$i]->id);
+                       }
+                    } 
+                    continue;
+                }
+               else if($query=='start_date1'){
+                         $collection=$collection->whereBetween('start_date',[$request->start_date1,$request->start_date2]);
+                     }
+              else if($query=='end_date1'){
+                    $collection=$collection->whereBetween('end_date',[$request->end_date1,$request->end_date2]);
+                   }     
+                $collection=$collection->where($query,$value);
+            }
         }
-        if($request->has('end_date1')){
-            $result=$result->whereBetween('end_date',[$request->end_date1,$request->end_date2]);
-        }
-        $result->splice($result->count(),0);
-        return $this->sendResponse($result,'done');
+        return $this->sendResponse($collection,'done');
      }
 
 
