@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Constants;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\DepartmentEmployeeRequest;
 use App\Models\Department;
@@ -16,8 +18,8 @@ class DepartmentEmployeeController extends BaseController
      */
     public function index(Department $department)
     {
-        $employees=$department->employees;
-        return $this->sendResponse($employees,'done');
+        $employees = $department->employees;
+        return $this->sendResponse($employees, 'done');
     }
 
     /**
@@ -26,11 +28,16 @@ class DepartmentEmployeeController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Department $department,DepartmentEmployeeRequest $request)
+    public function store(Department $department, DepartmentEmployeeRequest $request)
     {
-        $data=$request->all();
-        $data['department_id']=$department->id;
-        $employee=Employee::create($data);
-        return $this->sendResponse($employee,'done');
+        $employee = auth('sanctum')->user();
+        if ($employee->role != Constants::ADMIN_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $data = $request->all();
+            $data['department_id'] = $department->id;
+            $employee = Employee::create($data);
+            return $this->sendResponse($employee, 'done');
+        }
     }
 }

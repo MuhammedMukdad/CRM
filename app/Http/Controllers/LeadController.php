@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Constants;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\LeadRequest;
 use App\Models\Campaign;
@@ -21,8 +21,7 @@ class LeadController extends BaseController
    public function show($id)
    {
       $Lead = Lead::findOrFail($id);
-      return $this->sendResponse($Lead,'Lead returned successfully');
-
+      return $this->sendResponse($Lead, 'Lead returned successfully');
    }
     public function index()
     {
@@ -33,6 +32,10 @@ class LeadController extends BaseController
 
     public function store(LeadRequest $request)
     {
+      $employee = auth('sanctum')->user();
+       if ($employee->role != Constants::ADMIN_ID) {
+          return $this->sendError('you do not have permissions');
+      } else {
    
        $validated = $request->validated();
        $validated = $request->safe()->all();
@@ -56,74 +59,47 @@ class LeadController extends BaseController
        $Lead= Lead::create($newLead);
 
        return $this->sendResponse($Lead,'Lead created successfully');
-
-    }
-
-    public function update(LeadRequest $request,$id){
-        $Lead = Lead::findOrFail($id);
-        $Lead->name = $request->name;
-        $Lead->email = $request->email;
-        $Lead->phone = $request->phone;
-        $Lead->profit_amount = $request->profit_amount;
-        $Lead->state = $request->state;
-        $Lead->address = $request->address;
-        $Lead->arrive_date = $request->arrive_date;
-        $Lead->description = $request->description;
-        $Lead->save();
-
-        return $this->sendResponse($Lead,'Lead updated successfully');
-
    }
 
-   public function destroy($id){
+    }
 
-      $Lead = Lead::destroy($id);
-      return $this->sendResponse($Lead,'Lead destroyed successfully');
+   public function update(LeadRequest $request, $id)
+   {
+      $employee = auth('sanctum')->user();
+      if ($employee->role != Constants::ADMIN_ID) {
+         return $this->sendError('you do not have permissions');
+      } else {
+         $Lead = Lead::findOrFail($id);
+         $Lead->name = $request->name;
+         $Lead->email = $request->email;
+         $Lead->phone = $request->phone;
+         $Lead->profit_amount = $request->profit_amount;
+         $Lead->state = $request->state;
+         $Lead->address = $request->address;
+         $Lead->arrive_date = $request->arrive_date;
+         $Lead->description = $request->description;
+         $Lead->save();
 
-  } 
+         return $this->sendResponse($Lead, 'Lead updated successfully');
+      }
+   }
+
+   public function destroy($id)
+   {
+      $employee = auth('sanctum')->user();
+      if ($employee->role != Constants::ADMIN_ID) {
+         return $this->sendError('you do not have permissions');
+      } else {
+         $Lead = Lead::destroy($id);
+
+         return $this->sendResponse($Lead, 'Lead destroyed successfully');
+      }
+   }
    public function leadSearch(Request $request)
-    {
-        if($request->search_value!=null){
-           $result=$this->search(new Lead(),['name','email','phone','description'],$request->search_value);
-            return $this->sendResponse($result,'done');
-        }
-    }
-
-    public function filterLeads(Request $request){
-      
-        $collection=new Collection() ;
-        $collection=Lead::all();
-        foreach (request()->query() as $query => $value) {
-            if(isset($query,$value)){
-                if($query == 'service'){
-                    $service=Service::where('name',$value)->get()->first();
-                    $collection=$collection->where('service_id',$service->id);
-                    continue;
-                }
-                else if($query == 'campaign'){
-                    $campaign=Campaign::where('name',$value)->get()->first();
-                    $collection=$collection->where('campaign_id',$campaign->id);
-                    continue;
-                }
-                else if($query == 'source'){
-                    $source=Source::where('name',$value)->get()->first();
-                    $collection=$collection->where('source_id',$source->id);
-                    continue;
-                }
-
-                else if($query == 'employee'){
-                  $employee=Employee::where('name',$value)->get()->first();
-                  $collection=$collection->where('employee_id',$employee->id);
-                  continue;
-              }
-              if($query =='arrive_date'){
-               $collection=$collection->whereBetween('arrive_date',[$request->date1,$request->date2]);
-                }
-
-                $collection=$collection->where($query,$value);
-            }
-        }
-        return $this->sendResponse($collection,'done');
-    }
-    
+   {
+      if ($request->search_value != null) {
+         $result = $this->search(new Lead(), ['name', 'email', 'phone', 'description'], $request->search_value);
+         return $this->sendResponse($result, 'done');
+      }
+   }
 }
