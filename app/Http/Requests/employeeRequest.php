@@ -24,7 +24,8 @@ class employeeRequest extends FormRequest
             'password'=>'required',
             'isAdmin'=>'required',
             'description'=>'required',
-            'department_id'=>'required'
+            'department_id'=>'required',
+            'role'=>'required'
         ];
 
     }
