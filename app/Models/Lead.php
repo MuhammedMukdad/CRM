@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use App\Models\Campaign;
 
 class Lead extends Model
 {
@@ -19,4 +21,23 @@ class Lead extends Model
     public function campaign(){
         return $this->belongsTo(Campaign::class,'campaign_id','id');
     }
+
+
+    public function getLeads(string $arrive_date1,string $arrive_date2,string $state ,string $id_source){
+      
+     $record = DB::table('leads')
+            ->Join('campaigns', 'campaigns.id', '=', 'leads.campaign_id')
+            ->join('sources', 'sources.id', '=', 'leads.source_id')
+            ->join('services', 'services.id', '=', 'leads.service_id')
+            ->select('leads.id',DB::raw(' leads.name as name1'),'leads.email','leads.phone','leads.profit_amount','leads.state',
+            'leads.address',DB::raw(' leads.arrive_date as date_arrive'),'leads.description',
+            'services.name as name4','sources.name as name3','campaigns.name as name2',
+            
+            )
+            ->where('leads.campaign_id', '=', '2')
+            ->get()
+            ->toArray();
+        return $record;
+    }
+
 }
