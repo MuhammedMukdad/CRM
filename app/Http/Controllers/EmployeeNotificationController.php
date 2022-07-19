@@ -30,8 +30,9 @@ class EmployeeNotificationController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Employee $employee,EmployeeNotificationRequest $request)
+    public function store(EmployeeNotificationRequest $request)
     {
+        $employee = auth('sanctum')->user();
         $notification=$request->all();
         $notification['sender_id']=$employee->id;
         $notification=Notification::create($notification);
@@ -55,8 +56,9 @@ class EmployeeNotificationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee,Notification $notification)
+    public function show(Notification $notification)
     {
+        $employee = auth('sanctum')->user();
         return $employee->id == $notification->sender_id ? $this->sendResponse($notification,'done') : 
                                                             $this->sendError('you do not have permission');
     }

@@ -18,10 +18,13 @@ class CreateLeadsTable extends Migration
             $table->string("name");
             $table->string("email")->unique();
             $table->integer("phone")->unique();
+            $table->tinyInteger("seen")->default(0);
             $table->integer("profit_amount");
             $table->String("state");
             $table->string("address");
             $table->date("arrive_date");
+            $table->unsignedBigInteger('employee_id')->nullable();
+            $table->foreign("employee_id")->references("id")->on("employees");
             $table->text("description")->nullable();
             $table->unsignedBigInteger("service_id");
             $table->foreign("service_id")->references("id")->on("services");

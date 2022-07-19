@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\CampaignSourceController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\testController;
+use App\Http\Controllers\userController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,53 +19,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-/*
-Employee
-*/
-Route::resource('employees', EmployeeController::class)->only([
-    'index', 'store', 'update', 'destroy'
-]);
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::resource('employees.services', EmployeeServiceController::class)->only([
-    'index'
-]);
-Route::resource('employees.notifications', EmployeeNotificationController::class)->only([
-    'index','store','show'
-]);
-Route::resource('employees.received-notifications', EmployeeReceivedNotificationController::class)->only([
-    'index','show'
-]);
+    //Employee
+    Route::resource('employees', '\App\Http\Controllers\EmployeeController')->only([
+        'index', 'store', 'update', 'destroy'
+    ]);
+    Route::get('employees-search', 'EmployeeController@employeeSearch');
+
+    //Services
+    Route::resource('employees.services', '\App\Http\Controllers\EmployeeServiceController')->only([
+        'index'
+    ]);
+
+    //Notifications
+    Route::resource('employees_notifications', '\App\Http\Controllers\EmployeeNotificationController')->only([
+        'index', 'store', 'show'
+    ]);
+    Route::resource('employees_received-notifications', '\App\Http\Controllers\EmployeeReceivedNotificationController')->only([
+        'index', 'show'
+    ]);
 
 
-Route::get('employees-search','EmployeeController@employeeSearch');
+    //Services
+    Route::resource('services', '\App\Http\Controllers\ServiceController')->only([
+        'index', 'store', 'update', 'destroy'
+    ]);
 
-/*
-Services
-*/
+    Route::resource('services.employees', '\App\Http\Controllers\ServiceEmployeeController')->only([
+        'index'
+    ]);
 
-Route::resource('services', ServiceController::class)->only([
-    'index', 'store', 'update', 'destroy'
-]);
+    Route::resource('services.campaigns', '\App\Http\Controllers\ServiceCampaignController')->only([
+        'index'
+    ]);
 
-Route::resource('services.employees',ServiceEmployeeController::class)->only([
-    'index'
-]);
+    Route::get('services-search', 'CampaignController@compaignSearch');
 
-Route::resource('services.campaigns',ServiceCampaignController::class)->only([
-    'index'
-]);
-
-Route::get('services-search','CampaignController@compaignSearch');
-Route::get('services-filter','ServiceController@filterService');
-/*
-department
-*/
-Route::resource('departments.employees',DepartmentEmployeeController::class)->only([
-    'index','store'
-]);
 
 /*
 campaign
@@ -94,3 +89,12 @@ sources
 Route::resource('sources.campaigns',SourceCampaignController::class)->only([
     'index'
 ]);
+
+    //department
+    Route::resource('departments.employees', '\App\Http\Controllers\DepartmentEmployeeController')->only([
+        'index', 'store'
+    ]);
+
+Route::post('/user_login', [EmployeeController::class, 'login']);
+Route::post('/user_register', [EmployeeController::class, 'register']);
+

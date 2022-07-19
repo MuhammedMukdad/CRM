@@ -26,8 +26,9 @@ class EmployeeReceivedNotificationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee,ReceivedNotification $received_notification)
+    public function show(ReceivedNotification $received_notification)
     {
+        $employee = auth('sanctum')->user();
         return $employee->id == $received_notification->receiver_id 
                                 ? $this->sendResponse($received_notification,'done') :
                                   $this->sendError('you do not have permission');
