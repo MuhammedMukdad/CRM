@@ -9,10 +9,11 @@ use App\Models\Campaign;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\Lead;
-use App\Models\Service;
-use App\Models\ServiceEmployee;
-use App\Models\Source;
-use Illuminate\Database\Eloquent\Collection;
+
+use App\Exports\LeadExport;
+use App\Imports\LeadsImport;
+use Excel;
+use Illuminate\Support\Facades\DB;
 
 class LeadController extends BaseController
 {
@@ -21,7 +22,12 @@ class LeadController extends BaseController
    public function show($id)
    {
       $Lead = Lead::findOrFail($id);
-      return $this->sendResponse($Lead, 'Lead returned successfully');
+
+      $Lead->service;
+      $Lead->source;
+      $Lead->campaign;
+      return $this->sendResponse($Lead,'Lead returned successfully');
+
    }
     public function index()
     {
@@ -96,10 +102,38 @@ class LeadController extends BaseController
       }
    }
    public function leadSearch(Request $request)
-   {
-      if ($request->search_value != null) {
-         $result = $this->search(new Lead(), ['name', 'email', 'phone', 'description'], $request->search_value);
-         return $this->sendResponse($result, 'done');
-      }
-   }
+
+    {
+        if($request->search_value!=null){
+           $result=$this->search(new Lead(),['name','email','phone','description'],$request->search_value);
+            return $this->sendResponse($result,'done');
+        }
+    }
+
+    public function filterLeads(Request $request){
+       $result = $this->filter(new Lead());
+       if($request->has('arrive_date')){
+         $request=$request->whereBetween('arrive_date',[$request->date1,$request->date2]);
+       }
+       
+       $result->splice($result->count(),0);
+       return $this->sendResponse($result,'done');
+    }
+
+    public function exportoExcel(Request $request){
+   
+     return Excel::download(new LeadExport($request) ,'lead1.xlsx' );
+    }
+
+    public function exportocsv(){
+      return Excel::download(new LeadExport,'lead.csv' );
+        }
+
+    public function importLeads(Request $request)
+        {
+         Excel::import(new LeadsImport, $request->file('file'));
+         return 'dd';
+        }
+    
+
 }
