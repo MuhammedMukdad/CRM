@@ -15,8 +15,13 @@ class ServiceController extends BaseController
 {
     public function index()
     {
-        $Service = Service::all();
-        return $this->sendResponse($Service, 'Services returned seccesfully');
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $Service = Service::all();
+            return $this->sendResponse($Service, 'Services returned seccesfully');
+        }
     }
     public function store(Request $request)
     {
@@ -78,20 +83,30 @@ class ServiceController extends BaseController
     }
     public function serviceSearch(Request $request)
     {
-        if ($request->search_value != null) {
-            $result = $this->search(new Service(), ['name', 'description'], $request->search_value);
-            return $this->sendResponse($result, 'done');
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            if ($request->search_value != null) {
+                $result = $this->search(new Service(), ['name', 'description'], $request->search_value);
+                return $this->sendResponse($result, 'done');
+            }
         }
     }
 
-    public function filterService(Request $request){
-       // $result = $this->filter(new Service());
-        if($request->has('date1')){
-          $result=$request->whereBetween('date',[$request->date1,$request->date2]);
-        }
-        
-        $result->splice($result->count(),0);
-        return $this->sendResponse($result,'done');
-     }
-}
+    public function filterService(Request $request)
+    {
+        // $result = $this->filter(new Service());
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            if ($request->has('date1')) {
+                $result = $request->whereBetween('date', [$request->date1, $request->date2]);
+            }
 
+            $result->splice($result->count(), 0);
+            return $this->sendResponse($result, 'done');
+        }
+    }
+}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -15,8 +16,12 @@ class ServiceCampaignController extends BaseController
      */
     public function index(Service $service)
     {
-        $campaign=$service->campaigns;
-        return $this->sendResponse($campaign,'done');
-
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $campaign = $service->campaigns;
+            return $this->sendResponse($campaign, 'done');
+        }
     }
 }

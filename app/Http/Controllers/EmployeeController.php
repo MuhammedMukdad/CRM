@@ -37,43 +37,43 @@ class EmployeeController extends BaseController
             ]);
             $varEmployee->save();
 
-            $token = $varEmployee->createToken('auth_token')->plainTextToken;
-            return response()->json([
-                'user' => $varEmployee,
-                'access_token' => $token,
-            ]);
-            // return $this->sendResponse($varEmployee, 'employee Created seccesfully');
+            // $token = $varEmployee->createToken('auth_token')->plainTextToken;
+            // return response()->json([
+            //     'user' => $varEmployee,
+            //     'access_token' => $token,
+            // ]);
+            return $this->sendResponse($varEmployee, 'employee Created seccesfully');
         }
     }
-    public function register(employeeRequest $request)
-    {
-        // $employee = auth('sanctum')->user();
-        // return $employee;
-        // if ($employee->role != Constants::ADMIN_ID) {
-        //     return $this->sendError('you do not have permissions');
-        // } else {
-            $request['password'] = Hash::make($request->password);
-            $varEmployee = Employee::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'password' => $request->password,
-                'isAdmin' => $request->isAdmin,
-                'role' => $request->role,
-                'description' => $request->description,
-                'department_id' => $request->department_id
-            ]);
-            $varEmployee->save();
+    // public function register(employeeRequest $request)
+    // {
+    //     // $employee = auth('sanctum')->user();
+    //     // return $employee;
+    //     // if ($employee->role != Constants::ADMIN_ID) {
+    //     //     return $this->sendError('you do not have permissions');
+    //     // } else {
+    //         $request['password'] = Hash::make($request->password);
+    //         $varEmployee = Employee::create([
+    //             'name' => $request->name,
+    //             'email' => $request->email,
+    //             'phone' => $request->phone,
+    //             'address' => $request->address,
+    //             'password' => $request->password,
+    //             'isAdmin' => $request->isAdmin,
+    //             'role' => $request->role,
+    //             'description' => $request->description,
+    //             'department_id' => $request->department_id
+    //         ]);
+    //         $varEmployee->save();
 
-            $token = $varEmployee->createToken('auth_token')->plainTextToken;
-            return response()->json([
-                'user' => $varEmployee,
-                'access_token' => $token,
-            ]);
-            // return $this->sendResponse($varEmployee, 'employee Created seccesfully');
-        // }
-    }
+    //         $token = $varEmployee->createToken('auth_token')->plainTextToken;
+    //         return response()->json([
+    //             'user' => $varEmployee,
+    //             'access_token' => $token,
+    //         ]);
+    //         // return $this->sendResponse($varEmployee, 'employee Created seccesfully');
+    //     // }
+    // }
     public function login(LoginRequest $request)
     {
 

@@ -57,44 +57,40 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('services-search', 'CampaignController@compaignSearch');
 
 
-/*
-campaign
-*/
-Route::resource('campaigns.sources',CampaignSourceController::class)->only([
-    'index'
-]);
-Route::resource('campaigns',CampaignController::class)->only([
-   'show','index', 'store' ,'update', 'destroy'
-]);
 
-Route::get('campaigns-search','CompaignController@compaignSearch');
-Route::get('campaigns-filter','CompaignController@filterCampaign');
+    //campaign
+    Route::resource('campaigns.sources', CampaignSourceController::class)->only([
+        'index'
+    ]);
+    Route::resource('campaigns', CampaignController::class)->only([
+        'show', 'index', 'store', 'update', 'destroy'
+    ]);
 
-/**
- * Leads
- */
+    Route::get('campaigns-search', 'CompaignController@compaignSearch');
+    Route::get('campaigns-filter', 'CompaignController@filterCampaign');
 
-Route::resource('leads',LeadController::class)->only([
-    'show','index', 'store' ,'update', 'destroy'
- ]);
 
- Route::get('leads-export-excel','LeadController@exportoExcel');
- Route::post('leads-import-excel','LeadController@importLeads');
+    //Leads
+    Route::resource('leads', LeadController::class)->only([
+        'show', 'index', 'store', 'update', 'destroy'
+    ]);
 
- Route::get('leads-search','LeadController@leadSearch');
- Route::get('leads-filter','LeadController@filterLeads');
- /*
-sources
-*/
-Route::resource('sources.campaigns',SourceCampaignController::class)->only([
-    'index'
-]);
+    Route::get('leads-export-excel', 'LeadController@exportoExcel');
+    Route::post('leads-import-excel', 'LeadController@importLeads');
+
+    Route::get('leads-search', 'LeadController@leadSearch');
+    Route::get('leads-filter', 'LeadController@filterLeads');
+
+    //sources
+
+    Route::resource('sources.campaigns', SourceCampaignController::class)->only([
+        'index'
+    ]);
 
     //department
     Route::resource('departments.employees', '\App\Http\Controllers\DepartmentEmployeeController')->only([
         'index', 'store'
     ]);
-
+});
 Route::post('/user_login', [EmployeeController::class, 'login']);
-Route::post('/user_register', [EmployeeController::class, 'register']);
-
+// Route::post('/user_register', [EmployeeController::class, 'register']);
