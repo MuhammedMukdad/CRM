@@ -7,7 +7,10 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Requests\LeadRequest;
 use Illuminate\Http\Request;
 use App\Models\Lead;
-
+use App\Exports\LeadExport;
+use App\Imports\LeadsImport;
+use Excel;
+use Illuminate\Support\Facades\DB;
 class LeadController extends BaseController
 {
 
@@ -15,6 +18,9 @@ class LeadController extends BaseController
    public function show($id)
    {
       $Lead = Lead::findOrFail($id);
+      $Lead->service;
+      $Lead->source;
+      $Lead->campaign;
       return $this->sendResponse($Lead,'Lead returned successfully');
 
    }
@@ -76,5 +82,20 @@ class LeadController extends BaseController
        $result->splice($result->count(),0);
        return $this->sendResponse($result,'done');
     }
+
+    public function exportoExcel(Request $request){
+   
+     return Excel::download(new LeadExport($request) ,'lead1.xlsx' );
+    }
+
+    public function exportocsv(){
+      return Excel::download(new LeadExport,'lead.csv' );
+        }
+
+    public function importLeads(Request $request)
+        {
+         Excel::import(new LeadsImport, $request->file('file'));
+         return 'dd';
+        }
     
 }

@@ -83,6 +83,9 @@ Route::resource('leads',LeadController::class)->only([
     'show','index', 'store' ,'update', 'destroy'
  ]);
 
+ Route::get('leads-export-excel','LeadController@exportoExcel');
+ Route::post('leads-import-excel','LeadController@importLeads');
+
  Route::get('leads-search','LeadController@leadSearch');
  Route::get('leads-filter','LeadController@filterLeads');
  /*

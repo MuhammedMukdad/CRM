@@ -15,7 +15,8 @@ class CampaignController extends BaseController
    
     public function show($id)
     {
-      $Campaign = Campaign::findOrFail($id);
+       $Campaign = Campaign::findOrFail($id);
+       $Campaign['service_id'] =$Campaign->service->name;
        return $this->sendResponse($Campaign,'Campaigns returned successfully');
        
     }
