@@ -12,8 +12,9 @@ class EmployeeServiceController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Employee $employee)
+    public function index()
     {
+        $employee = auth('sanctum')->user();
         $services=$employee->services;
         return $this->sendResponse($services,'done');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants;
 use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Campaign;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,8 +17,12 @@ class CampaignSourceController extends BaseController
      */
     public function index(Campaign $campaign)
     {
-        $sources=$campaign->source;
-        return $this->sendResponse($sources,'done');
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $sources = $campaign->source;
+            return $this->sendResponse($sources, 'done');
+        }
     }
-
 }

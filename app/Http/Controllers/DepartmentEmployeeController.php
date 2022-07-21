@@ -11,33 +11,29 @@ use Illuminate\Http\Request;
 
 class DepartmentEmployeeController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Department $department)
     {
         $employees = $department->employees;
         return $this->sendResponse($employees, 'done');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Department $department, DepartmentEmployeeRequest $request)
     {
         $employee = auth('sanctum')->user();
         if ($employee->role != Constants::ADMIN_ID) {
             return $this->sendError('you do not have permissions');
         } else {
-            $data = $request->all();
-            $data['department_id'] = $department->id;
-            $employee = Employee::create($data);
-            return $this->sendResponse($employee, 'done');
+            $employee = auth('sanctum')->user();
+            if ($employee->role != Constants::ADMIN_ID) {
+                return $this->sendError('you do not have permissions');
+            } else {
+                $data = $request->all();
+                $data['department_id'] = $department->id;
+                $employee = Employee::create($data);
+                return $this->sendResponse($employee, 'done');
+            }
         }
     }
 }

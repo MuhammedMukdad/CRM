@@ -16,17 +16,24 @@ class CampaignController extends BaseController
 {
     public function show($id)
     {
-
-       $Campaign = Campaign::findOrFail($id);
-       $Campaign['service_id'] =$Campaign->service->name;
-       return $this->sendResponse($Campaign,'Campaigns returned successfully');
-       
-
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $Campaign = Campaign::findOrFail($id);
+            $Campaign['service_id'] = $Campaign->service->name;
+            return $this->sendResponse($Campaign, 'Campaigns returned successfully');
+        }
     }
     public function index()
     {
-        $Campaigns = Campaign::all();
-        return $this->sendResponse($Campaigns, 'Campaigns returned successfully');
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $Campaigns = Campaign::all();
+            return $this->sendResponse($Campaigns, 'Campaigns returned successfully');
+        }
     }
 
     public function store(CampaignRequest $request)
@@ -64,37 +71,40 @@ class CampaignController extends BaseController
         }
     }
 
-    public function filterCampaign(Request $request){
-        $collection=new Collection() ;
-        $collection=Campaign::all();
-        foreach (request()->query() as $query => $value) {
-            if(isset($query,$value)){
-                if($query == 'service'){
-                    $service=Service::where('name',$value)->get()->first();
-                    $collection=$collection->where('service_id',$service->id);
-                    continue;
+    public function filterCampaign(Request $request)
+    {
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            $collection = new Collection();
+            $collection = Campaign::all();
+            foreach (request()->query() as $query => $value) {
+                if (isset($query, $value)) {
+                    if ($query == 'service') {
+                        $service = Service::where('name', $value)->get()->first();
+                        $collection = $collection->where('service_id', $service->id);
+                        continue;
+                    } else if ($query == 'source') {
+                        $source = Source::where('name', $value)->get()->first();
+                        $sourceCampaign = SourceCampaign::where('source_id', $source->id);
+                        for ($i = 0; $i < count($collection); $i++) {
+                            if (!$sourceCampaign->contains($collection[$i]->id)) {
+                                $collection->forget($collection[$i]->id);
+                            }
+                        }
+                        continue;
+                    } else if ($query == 'start_date1') {
+                        $collection = $collection->whereBetween('start_date', [$request->start_date1, $request->start_date2]);
+                    } else if ($query == 'end_date1') {
+                        $collection = $collection->whereBetween('end_date', [$request->end_date1, $request->end_date2]);
+                    }
+                    $collection = $collection->where($query, $value);
                 }
-                else if($query == 'source'){
-                    $source=Source::where('name',$value)->get()->first();
-                    $sourceCampaign=SourceCampaign::where('source_id',$source->id);
-                    for ($i=0; $i <count($collection) ; $i++) {
-                       if(!$sourceCampaign->contains($collection[$i]->id)){
-                            $collection->forget($collection[$i]->id);
-                       }
-                    } 
-                    continue;
-                }
-               else if($query=='start_date1'){
-                         $collection=$collection->whereBetween('start_date',[$request->start_date1,$request->start_date2]);
-                     }
-              else if($query=='end_date1'){
-                    $collection=$collection->whereBetween('end_date',[$request->end_date1,$request->end_date2]);
-                   }     
-                $collection=$collection->where($query,$value);
             }
+            return $this->sendResponse($collection, 'done');
         }
-        return $this->sendResponse($collection,'done');
-     }
+    }
 
 
     public function destroy($id)
@@ -112,9 +122,14 @@ class CampaignController extends BaseController
 
     public function compaignSearch(Request $request)
     {
-        if ($request->search_value != null) {
-            $result = $this->search(new Campaign(), ['name', 'description'], $request->search_value);
-            return $this->sendResponse($result, 'done');
+        $employee = auth('sanctum')->user();
+        if ($employee->role == Constants::SALES_EMPLOYEE_ID) {
+            return $this->sendError('you do not have permissions');
+        } else {
+            if ($request->search_value != null) {
+                $result = $this->search(new Campaign(), ['name', 'description'], $request->search_value);
+                return $this->sendResponse($result, 'done');
+            }
         }
     }
 }

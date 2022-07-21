@@ -17,8 +17,9 @@ class EmployeeNotificationController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Employee $employee)
+    public function index()
     {
+        $employee = auth('sanctum')->user();
         $notifications=$employee->notifications;
         return $this->sendResponse($notifications,'done');
     }
